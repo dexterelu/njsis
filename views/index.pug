@@ -1,0 +1,32 @@
+doctype
+html
+	head
+		title NJSIS
+	body
+		h1 NJSIS
+		p 
+			b Originals
+			br
+			a(href="/image/athens.jpg") Athens
+			br
+			a(href="/image/dogue.jpg") Dogue
+		p
+			b Scaled
+			br
+			a(href="/image/athens.jpg?size=200x200") Athens 200x200
+			br
+			a(href="/image/athens.jpg?size=300x199") Athens 300x199 
+			br
+			br
+			a(href="/image/dogue.jpg?size=200x200") Dogue 200x200
+			br
+			a(href="/image/dogue.jpg?size=300x200") Dogue 300x200
+		p 
+			b Upload
+			br
+			a(href="/upload") New image
+		p
+			b Stats
+		p OS/CPU: #{platform}/#{arch}
+		p Available RAM: #{freemem}
+		p Uptime: #{uptime}

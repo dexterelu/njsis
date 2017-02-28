@@ -1,0 +1,10 @@
+doctype
+html
+	head
+		title NJSIS
+	body
+		h1 NJSIS
+		p Upload a new image (max #{maxfilesize} bytes)
+		form(method="post", action="/upload", enctype="multipart/form-data")
+			input(name="file", type="file")
+			input(type="submit", value="upload")
