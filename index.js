@@ -10,7 +10,8 @@ const express	= require('express'),
 	upload 			= multer({
 		dest: './public/images/',
 		limits: {fileSize: 1e6, files: 1}
-	});
+	}),
+	started 		= Date.now();
 
 app.set('view engine', 'pug');
 
@@ -88,12 +89,12 @@ app.all('/', function (req, res) { // Show index
 	//	const shell	= require('shelljs'),
 	// 	originals: shell.exec('ls -1 public/images | wc -l', { silent:true }).output
 	//	cached: shell.exec('ls -1 public/cache | wc -l', { silent:true }).output
-	console.log(os.arch());
 	res.render('index', {
 		arch: os.arch(),
 		freemem: Math.round(os.freemem()/1.05e6) + 'MB',
 		platform: os.platform(),
-		uptime: os.uptime()
+		server_uptime: os.uptime(),
+		njsis_uptime: Math.round((Date.now() - started) / 1000)
 	})
 })
 
