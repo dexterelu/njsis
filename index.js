@@ -7,10 +7,11 @@ const express	= require('express'),
 	app 				= express(),
 	port 				= process.env.PORT || 3000,
 	connections = process.env.MAX_CONNECTIONS || 1000,
+	maxfilesize = 1e7,
 	upload 			= multer({
 		dest: './public/images/',
-		limits: {fileSize: 1e6, files: 1}
-	}),
+		limits: {fileSize: maxfilesize, files: 1}
+	}).single('file'),
 	started 		= Date.now();
 
 app.set('view engine', 'pug');
@@ -71,17 +72,23 @@ app.get('/image/:filename', function (req, res) {
 });
 
 app.get('/upload', function (req, res) { // Show upload form
-	res.render('upload', { maxfilesize: upload.limits.fileSize })
+	res.render('upload_form', { maxfilesize: maxfilesize })
 })
 
-app.post('/upload', upload.single('file'), function (req, res) { // Upload posted file
-	fs.rename(req.file.destination + req.file.filename, req.file.destination + req.file.originalname, function(err) {
+app.post('/upload', function (req, res) { // Upload posted file
+	upload(req, res, function(err) {
 		if(err) {
-			res.send('File upload failed with error code' + err + '.')
-		} else {
-			res.send('File <a href="/image/' + req.file.originalname + '">' + req.file.originalname + '</a> uploaded successfully.')
-		}
-	});
+			res.send(err + '.');
+			return
+		} 
+		fs.rename(req.file.destination + req.file.filename, req.file.destination + req.file.originalname, function(err) {
+			if(err) {
+				res.send('Uploaded file could not be renamed. Error ' + err + '.')
+			} else {
+				res.send('File <a href="/image/' + req.file.originalname + '">' + req.file.originalname + '</a> uploaded successfully.')
+			}
+		});
+	})
 })
 
 app.all('/', function (req, res) { // Show index
